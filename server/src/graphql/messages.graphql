@@ -1,0 +1,17 @@
+type Query {
+  messagesByUser(receiverId: Int!): [Message]
+}
+
+type Mutation {
+  createMessage(receiverId: Int!, text: String!): Message
+}
+
+scalar Date
+
+type Message {
+  id: ID!
+  text: String!
+  receiverId: Int!
+  senderId: Int!
+  createdAt: Date!
+}
