@@ -19,4 +19,9 @@ module.exports = {
       );
     },
   },
+  Subscription: {
+    messageAdded: {
+      subscribe: () => messagesModel.subscriptionMessages(),
+    },
+  },
 };

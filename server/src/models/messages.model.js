@@ -1,6 +1,10 @@
 const { PrismaClient } = require("@prisma/client");
+const { PubSub } = require("graphql-subscriptions");
 
 const prisma = new PrismaClient();
+const pubsub = new PubSub();
+
+const MESSAGE_ADDED = "MESSAGE_ADDED";
 
 async function createMessage(receiverId, text, userId) {
   const message = await prisma.message.create({
@@ -10,6 +14,8 @@ async function createMessage(receiverId, text, userId) {
       senderId: userId,
     },
   });
+
+  pubsub.publish(MESSAGE_ADDED, { messageAdded: message });
 
   return message;
 }
@@ -30,4 +36,8 @@ async function messagesByUser(receiverId, userId) {
   return messages;
 }
 
-module.exports = { createMessage, messagesByUser };
+async function subscriptionMessages() {
+  return pubsub.asyncIterator(MESSAGE_ADDED);
+}
+
+module.exports = { createMessage, messagesByUser, subscriptionMessages };

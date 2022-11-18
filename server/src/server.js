@@ -7,6 +7,9 @@ const { ApolloServer } = require("apollo-server-express");
 const { makeExecutableSchema } = require("@graphql-tools/schema");
 const { loadFilesSync } = require("@graphql-tools/load-files");
 
+const { WebSocketServer } = require("ws");
+const { useServer } = require("graphql-ws/lib/use/ws");
+
 const typesArray = loadFilesSync(path.join(__dirname, "**/*.graphql"));
 const resolversArray = loadFilesSync(path.join(__dirname, "**/*.resolver.js"));
 
@@ -18,21 +21,33 @@ async function startApolloServer() {
     resolvers: resolversArray,
   });
 
-  const server = new ApolloServer({
+  const apolloServer = new ApolloServer({
     schema,
     context: ({ req }) => {
       const { authorization } = req.headers;
       if (authorization) {
-        const { userId } = jwt.verify(authorization, process.env.JWT_SECRET);
-        return { userId };
+        try {
+          const { userId } = jwt.verify(authorization, process.env.JWT_SECRET);
+
+          return { userId };
+        } catch (err) {
+          console.log(err.message);
+        }
       }
     },
   });
 
-  await server.start();
-  server.applyMiddleware({ app, path: "/graphql" });
+  await apolloServer.start();
+  apolloServer.applyMiddleware({ app, path: "/graphql" });
 
-  app.listen(5000, () => {
+  const PORT = process.env.PORT || 5000;
+  const server = app.listen(PORT, () => {
+    const wsServer = new WebSocketServer({
+      server,
+      path: "/graphql",
+    });
+
+    useServer({ schema }, wsServer);
     console.log("Graphql app in running");
   });
 }

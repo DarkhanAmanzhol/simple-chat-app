@@ -15,3 +15,7 @@ type Message {
   senderId: Int!
   createdAt: Date!
 }
+
+type Subscription {
+  messageAdded: Message
+}
