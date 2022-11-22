@@ -16,7 +16,7 @@ type Token {
 }
 
 type Mutation {
-  registerUser(user: RegisterInput!): User
+  registerUser(user: RegisterInput!): Token
   loginUser(user: LoginInput!): Token
 }
 

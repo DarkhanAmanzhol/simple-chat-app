@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useMutation } from "@apollo/client";
 import "./login-register.css";
 import {
@@ -14,7 +14,8 @@ import {
 
 import { REGISTER_USER } from "../../graphql/mutations";
 
-function Register() {
+function Register({ setLoggedIn }) {
+  const navigate = useNavigate();
   const [auth, setAuth] = useState({
     firstName: "",
     lastName: "",
@@ -23,7 +24,13 @@ function Register() {
   });
   const { firstName, lastName, email, password } = auth;
 
-  const [registerUser, { data, loading, error }] = useMutation(REGISTER_USER);
+  const [registerUser, { data, loading, error }] = useMutation(REGISTER_USER, {
+    onCompleted(data) {
+      localStorage.setItem("jwt", data.registerUser.token);
+      setLoggedIn(true);
+      navigate("/");
+    },
+  });
 
   if (loading) {
     return (
@@ -61,9 +68,7 @@ function Register() {
       <Box component='form' onSubmit={handleSubmit} sx={{ width: "500px" }}>
         <Stack direction='column' spacing={3}>
           {data && (
-            <Alert severity='success'>
-              {data.registerUser.firstName} successfully registered
-            </Alert>
+            <Alert severity='success'>User successfully registered</Alert>
           )}
           {error && <Alert severity='error'>{error.message}</Alert>}
 

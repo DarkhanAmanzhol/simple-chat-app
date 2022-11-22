@@ -50,7 +50,9 @@ async function registerUser(user) {
     },
   });
 
-  return createdUser;
+  const token = jwt.sign({ userId: createdUser.id }, process.env.JWT_SECRET);
+
+  return { token };
 }
 
 async function loginUser(user) {

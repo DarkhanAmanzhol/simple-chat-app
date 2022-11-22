@@ -56,7 +56,10 @@ function App() {
     <div>
       <Routes>
         <Route path='/login' element={<Login setLoggedIn={setLoggedIn} />} />
-        <Route path='/register' element={<Register />} />
+        <Route
+          path='/register'
+          element={<Register setLoggedIn={setLoggedIn} />}
+        />
         {loggedIn && (
           <Route path='/*' element={<ChatRoutes setLoggedIn={setLoggedIn} />} />
         )}

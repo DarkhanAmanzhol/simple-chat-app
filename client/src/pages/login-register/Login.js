@@ -62,9 +62,7 @@ function Login({ setLoggedIn }) {
       <Box component='form' onSubmit={handleSubmit} sx={{ width: "500px" }}>
         <Stack direction='column' spacing={3}>
           {data && (
-            <Alert severity='success'>
-              {data.loginUser.token} successfully registered
-            </Alert>
+            <Alert severity='success'>User successfully registered</Alert>
           )}
           {error && <Alert severity='error'>{error.message}</Alert>}
           <Typography variant='h5'>Log in</Typography>
