@@ -1,5 +1,4 @@
 const usersModel = require("../models/users.model");
-const jwt = require("jsonwebtoken");
 module.exports = {
   Query: {
     users: (_, args, context) => {
@@ -10,14 +9,6 @@ module.exports = {
     },
     user: (_, args) => {
       return usersModel.getUser(parseInt(args.id));
-    },
-    checkToken: (_, args) => {
-      try {
-        jwt.verify(args.token, process.env.JWT_SECRET);
-        return true;
-      } catch (err) {
-        return false;
-      }
     },
   },
   Mutation: {

@@ -1,7 +1,6 @@
 type Query {
   users: [User]
   user(id: ID!): User
-  checkToken(token: String!): Boolean!
 }
 
 type User {

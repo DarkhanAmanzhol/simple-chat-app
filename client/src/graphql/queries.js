@@ -22,9 +22,3 @@ export const GET_MESSAGES_BY_USER = gql`
     }
   }
 `;
-
-export const CHECK_TOKEN = gql`
-  query CheckToken($token: String!) {
-    checkToken(token: $token)
-  }
-`;

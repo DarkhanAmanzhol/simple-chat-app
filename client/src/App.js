@@ -27,28 +27,7 @@ const ChatRoutes = ({ setLoggedIn }) => {
 };
 
 function App() {
-  const location = useLocation();
-  const navigate = useNavigate();
   const token = localStorage.getItem("jwt");
-
-  // User Token Guard
-  const { data } = useQuery(CHECK_TOKEN, {
-    skip: token === null ? true : false,
-    variables: {
-      token: token || "no token",
-    },
-  });
-
-  useEffect(() => {
-    if (
-      !data?.checkToken &&
-      (location.pathname !== "/register" || location.pathname !== "/login")
-    ) {
-      localStorage.removeItem("jwt");
-      navigate("/login");
-    }
-  }, []);
-  //  User Token Guard End
 
   const [loggedIn, setLoggedIn] = useState(token ? true : false);
 
