@@ -8,7 +8,15 @@ import Loading from "./loading.component";
 
 const SideBar = ({ setLoggedIn }) => {
   const navigate = useNavigate();
-  const { data, loading, error } = useQuery(GET_ALL_USERS);
+  const { data, loading, error, client } = useQuery(GET_ALL_USERS);
+
+  const logOutUser = () => {
+    client.resetStore();
+    localStorage.removeItem("jwt");
+    setLoggedIn(false);
+    navigate("/login");
+  };
+
   return (
     <>
       <Box
@@ -19,17 +27,13 @@ const SideBar = ({ setLoggedIn }) => {
       >
         <Stack direction='row' justifyContent='space-between'>
           <Typography variant='h6'>Chat</Typography>
-          <LogoutIcon
-            onClick={() => {
-              localStorage.removeItem("jwt");
-              setLoggedIn(false);
-              navigate("/login");
-            }}
-          />
+          <LogoutIcon onClick={logOutUser} />
         </Stack>
         <Divider />
         {loading ? (
           <Loading />
+        ) : error ? (
+          logOutUser()
         ) : (
           data.users?.map((user) => {
             return <UserCard key={user.id} user={user} />;
